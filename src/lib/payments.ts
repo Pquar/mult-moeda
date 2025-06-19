@@ -2,11 +2,13 @@ type Payment = {
   id: string
   amount: number
   status: PaymentStatus
+  description?: string
   email: string
   company: string
   currency: Currency
   date: string
   subsidiaryCompany: SubsidiaryCompany
+  category?: string
 }
 
 type PaymentStatus = "pending" | "processing" | "success" | "failed"
@@ -16,6 +18,7 @@ type Invoice = {
     id: string
     amount: number
     status: PaymentStatus
+    description?: string
     email: string
     company: string
     subsidiaryCompany: SubsidiaryCompany
@@ -24,6 +27,7 @@ type Invoice = {
     workers: Worker[]
     currency: Currency
     issueDate: string
+    client?: string
 }
 
 type Worker = {

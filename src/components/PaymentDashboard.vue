@@ -1046,7 +1046,7 @@ const exportCompleteReportCSV = () => {
                 <circle cx="50" cy="50" r="40" fill="none" stroke="#e5e7eb" stroke-width="8"/>
                 
                 <!-- Segmentos do gráfico -->
-                <circle v-for="(segment, index) in costDistributionData" 
+                <circle v-for="(segment) in costDistributionData" 
                         :key="segment.company"
                         cx="50" cy="50" r="40" 
                         fill="none" 
