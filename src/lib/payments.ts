@@ -10,7 +10,7 @@ type Payment = {
 }
 
 type PaymentStatus = "pending" | "processing" | "success" | "failed"
-type SubsidiaryCompany = "COMPANY_A" | "COMPANY_B" | "COMPANY_C"
+type SubsidiaryCompany = "COMPANY_USD" | "COMPANY_EUR" | "COMPANY_BRL"
 
 type Invoice = {
     id: string
@@ -44,25 +44,25 @@ type Currency = {
   value: number
 }
 
-// Definição das moedas
+// Definição das moedas (BRL como base)
 export const currencies: Currency[] = [
   {
     code: "USD",
     symbol: "USD",
     name: "US Dollar",
-    value: 0.18
+    value: 0.20  // 1 BRL = 0.20 USD (1 USD = 5 BRL aproximadamente)
   },
   {
     code: "EUR", 
     symbol: "EUR",
     name: "Euro",
-    value: 0.16
+    value: 0.18  // 1 BRL = 0.18 EUR (1 EUR = 5.5 BRL aproximadamente)
   },
   {
     code: "BRL",
     symbol: "BRL",
     name: "Brazilian Real",
-    value: 1.0
+    value: 1.0   // Moeda base
   }
 ]
 
@@ -81,7 +81,7 @@ export const payments: Payment[] = [
         company: "Apple",
         currency: getCurrency("USD"),
         date: "2025-06-15",
-        subsidiaryCompany: "COMPANY_A"
+        subsidiaryCompany: "COMPANY_USD"
     },
     {
         id: "pay_002", 
@@ -91,7 +91,7 @@ export const payments: Payment[] = [
         company: "Microsoft",
         currency: getCurrency("USD"),
         date: "2025-06-16",
-        subsidiaryCompany: "COMPANY_B"
+        subsidiaryCompany: "COMPANY_USD"
     },
     {
         id: "pay_003",
@@ -101,7 +101,7 @@ export const payments: Payment[] = [
         company: "Amazon",
         currency: getCurrency("USD"),
         date: "2025-06-17",
-        subsidiaryCompany: "COMPANY_C"
+        subsidiaryCompany: "COMPANY_USD"
     },
     {
         id: "pay_004",
@@ -111,7 +111,7 @@ export const payments: Payment[] = [
         company: "Coca-Cola",
         currency: getCurrency("USD"),
         date: "2025-06-18",
-        subsidiaryCompany: "COMPANY_A"
+        subsidiaryCompany: "COMPANY_USD"
     },
     {
         id: "pay_005",
@@ -121,7 +121,7 @@ export const payments: Payment[] = [
         company: "Google",
         currency: getCurrency("USD"),
         date: "2025-06-19",
-        subsidiaryCompany: "COMPANY_B"
+        subsidiaryCompany: "COMPANY_USD"
     },
     {
         id: "pay_006",
@@ -131,7 +131,7 @@ export const payments: Payment[] = [
         company: "Samsung",
         currency: getCurrency("EUR"),
         date: "2025-06-14",
-        subsidiaryCompany: "COMPANY_C"
+        subsidiaryCompany: "COMPANY_EUR"
     },
     {
         id: "pay_007",
@@ -141,7 +141,7 @@ export const payments: Payment[] = [
         company: "Toyota", 
         currency: getCurrency("EUR"),
         date: "2025-06-13",
-        subsidiaryCompany: "COMPANY_A"
+        subsidiaryCompany: "COMPANY_EUR"
     },
     {
         id: "pay_008",
@@ -151,7 +151,7 @@ export const payments: Payment[] = [
         company: "Mercedes-Benz",
         currency: getCurrency("EUR"),
         date: "2025-06-12",
-        subsidiaryCompany: "COMPANY_B"
+        subsidiaryCompany: "COMPANY_EUR"
     },
     {
         id: "pay_009",
@@ -161,7 +161,7 @@ export const payments: Payment[] = [
         company: "Nike",
         currency: getCurrency("EUR"),
         date: "2025-06-11",
-        subsidiaryCompany: "COMPANY_C"
+        subsidiaryCompany: "COMPANY_EUR"
     },
     {
         id: "pay_010",
@@ -171,7 +171,7 @@ export const payments: Payment[] = [
         company: "BMW",
         currency: getCurrency("EUR"),
         date: "2025-06-10",
-        subsidiaryCompany: "COMPANY_A"
+        subsidiaryCompany: "COMPANY_EUR"
     },
     {
         id: "pay_011",
@@ -181,7 +181,7 @@ export const payments: Payment[] = [
         company: "Nubank",
         currency: getCurrency("BRL"),
         date: "2025-06-20",
-        subsidiaryCompany: "COMPANY_A"
+        subsidiaryCompany: "COMPANY_BRL"
     },
     {
         id: "pay_012",
@@ -191,7 +191,7 @@ export const payments: Payment[] = [
         company: "Itaú",
         currency: getCurrency("BRL"),
         date: "2025-06-21",
-        subsidiaryCompany: "COMPANY_B"
+        subsidiaryCompany: "COMPANY_BRL"
     },
     {
         id: "pay_013",
@@ -201,7 +201,7 @@ export const payments: Payment[] = [
         company: "Ambev",
         currency: getCurrency("BRL"),
         date: "2025-06-22",
-        subsidiaryCompany: "COMPANY_C"
+        subsidiaryCompany: "COMPANY_BRL"
     },
     {
         id: "pay_014",
@@ -211,7 +211,7 @@ export const payments: Payment[] = [
         company: "Natura",
         currency: getCurrency("BRL"),
         date: "2025-06-23",
-        subsidiaryCompany: "COMPANY_A"
+        subsidiaryCompany: "COMPANY_BRL"
     }
 ]
 
@@ -427,7 +427,7 @@ export const invoices: Invoice[] = [
         status: "success",
         email: "finance@apple.com",
         company: "Apple",
-        subsidiaryCompany: "COMPANY_A",
+        subsidiaryCompany: "COMPANY_USD",
         dueDate: "2025-07-15",
         invoiceNumber: "AP-2025-001",
         workers: [workers[0], workers[14]],
@@ -440,7 +440,7 @@ export const invoices: Invoice[] = [
         status: "pending",
         email: "accounting@microsoft.com", 
         company: "Microsoft",
-        subsidiaryCompany: "COMPANY_B",
+        subsidiaryCompany: "COMPANY_EUR",
         dueDate: "2025-07-16",
         invoiceNumber: "MS-2025-002",
         workers: [workers[1], workers[15]],
@@ -453,7 +453,7 @@ export const invoices: Invoice[] = [
         status: "processing",
         email: "payments@amazon.com",
         company: "Amazon",
-        subsidiaryCompany: "COMPANY_C", 
+        subsidiaryCompany: "COMPANY_BRL", 
         dueDate: "2025-07-17",
         invoiceNumber: "AMZ-2025-003",
         workers: [workers[2], workers[16]],
@@ -466,7 +466,7 @@ export const invoices: Invoice[] = [
         status: "success",
         email: "finance@coca-cola.com",
         company: "Coca-Cola",
-        subsidiaryCompany: "COMPANY_A",
+        subsidiaryCompany: "COMPANY_USD",
         dueDate: "2025-07-18", 
         invoiceNumber: "CC-2025-004",
         workers: [workers[3]],
@@ -479,7 +479,7 @@ export const invoices: Invoice[] = [
         status: "failed",
         email: "billing@google.com",
         company: "Google",
-        subsidiaryCompany: "COMPANY_B",
+        subsidiaryCompany: "COMPANY_EUR",
         dueDate: "2025-07-19",
         invoiceNumber: "GG-2025-005",
         workers: [workers[4]],
@@ -492,7 +492,7 @@ export const invoices: Invoice[] = [
         status: "processing",
         email: "finance@samsung.com",
         company: "Samsung",
-        subsidiaryCompany: "COMPANY_C",
+        subsidiaryCompany: "COMPANY_BRL",
         dueDate: "2025-07-14",
         invoiceNumber: "SM-2025-006", 
         workers: [workers[5], workers[17]],
@@ -505,7 +505,7 @@ export const invoices: Invoice[] = [
         status: "success",
         email: "payments@toyota.com",
         company: "Toyota",
-        subsidiaryCompany: "COMPANY_A",
+        subsidiaryCompany: "COMPANY_USD",
         dueDate: "2025-07-13",
         invoiceNumber: "TY-2025-007",
         workers: [workers[6], workers[18]],
@@ -518,7 +518,7 @@ export const invoices: Invoice[] = [
         status: "pending",
         email: "finance@mercedes-benz.com",
         company: "Mercedes-Benz",
-        subsidiaryCompany: "COMPANY_B",
+        subsidiaryCompany: "COMPANY_EUR",
         dueDate: "2025-07-12",
         invoiceNumber: "MB-2025-008",
         workers: [workers[7]],
@@ -531,7 +531,7 @@ export const invoices: Invoice[] = [
         status: "success",
         email: "accounting@nike.com",
         company: "Nike",
-        subsidiaryCompany: "COMPANY_C",
+        subsidiaryCompany: "COMPANY_BRL",
         dueDate: "2025-07-11",
         invoiceNumber: "NK-2025-009",
         workers: [workers[8]],
@@ -544,7 +544,7 @@ export const invoices: Invoice[] = [
         status: "processing",
         email: "finance@bmw.com",
         company: "BMW",
-        subsidiaryCompany: "COMPANY_A",
+        subsidiaryCompany: "COMPANY_USD",
         dueDate: "2025-07-10",
         invoiceNumber: "BM-2025-010",
         workers: [workers[9]],
@@ -557,7 +557,7 @@ export const invoices: Invoice[] = [
         status: "success",
         email: "finance@nubank.com",
         company: "Nubank",
-        subsidiaryCompany: "COMPANY_A",
+        subsidiaryCompany: "COMPANY_USD",
         dueDate: "2025-07-20",
         invoiceNumber: "NU-2025-011",
         workers: [workers[10], workers[19]],
@@ -570,7 +570,7 @@ export const invoices: Invoice[] = [
         status: "pending",
         email: "pagamentos@itau.com.br",
         company: "Itaú",
-        subsidiaryCompany: "COMPANY_B",
+        subsidiaryCompany: "COMPANY_EUR",
         dueDate: "2025-07-21",
         invoiceNumber: "IT-2025-012",
         workers: [workers[11]],
@@ -583,7 +583,7 @@ export const invoices: Invoice[] = [
         status: "processing",
         email: "contas@ambev.com.br",
         company: "Ambev",
-        subsidiaryCompany: "COMPANY_C",
+        subsidiaryCompany: "COMPANY_BRL",
         dueDate: "2025-07-22",
         invoiceNumber: "AM-2025-013",
         workers: [workers[12]],
@@ -596,7 +596,7 @@ export const invoices: Invoice[] = [
         status: "success",
         email: "financeiro@natura.net",
         company: "Natura",
-        subsidiaryCompany: "COMPANY_A",
+        subsidiaryCompany: "COMPANY_USD",
         dueDate: "2025-07-23",
         invoiceNumber: "NA-2025-014",
         workers: [workers[13]],

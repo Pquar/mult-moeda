@@ -6,7 +6,8 @@ Um dashboard completo para gerenciamento de pagamentos, faturas e empregados em 
 
 ### 💳 Sistema Multi-Moeda
 - **3 Moedas Suportadas**: USD, EUR, BRL
-- **Conversão Automática**: Todos os valores convertidos para USD para comparação
+- **Moeda Base**: Real Brasileiro (BRL)
+- **Conversão Automática**: Todos os valores convertidos para BRL para comparação
 - **Filtros por Moeda**: Visualize pagamentos por moeda específica
 
 ### 🏢 Empresas Globais
@@ -84,13 +85,13 @@ npm run build
    - Número de pagamentos
 
 ### 3. **Total Geral**
-   - Soma de todos os pagamentos convertidos para USD
+   - Soma de todos os pagamentos convertidos para BRL
    - Estatísticas consolidadas
 
 ### 4. **Tabela de Pagamentos**
    - Informações completas de cada pagamento
    - Status coloridos
-   - Valores em moeda local e USD
+   - Valores em moeda local e BRL
    - Dados da empresa e subsidiária
 
 ### 5. **Gestão de Empregados**
@@ -109,8 +110,8 @@ npm run build
 - `SubsidiaryCompany`: Empresas subsidiárias
 
 ### Conversão de Moedas
-- Sistema baseado em taxas fixas
-- Conversão automática para USD
+- Sistema baseado em taxas fixas com BRL como moeda base
+- Conversão automática para BRL
 - Formatação localizada de valores
 
 ### Componentes Responsivos
