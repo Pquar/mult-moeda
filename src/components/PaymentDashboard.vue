@@ -271,6 +271,132 @@ const costDistributionData = computed(() => {
 const totalProjectRevenue = computed(() => {
   return monthlySalariesByProject.value.reduce((sum, project) => sum + project.projectRevenue, 0)
 })
+
+// Função para converter dados para CSV
+const convertToCSV = (data: any[], headers: string[]) => {
+  const csvHeaders = headers.join(',')
+  const csvRows = data.map(row => 
+    headers.map(header => {
+      const value = row[header] || ''
+      // Escapar aspas e envolver em aspas se contém vírgula
+      const stringValue = String(value).replace(/"/g, '""')
+      return stringValue.includes(',') || stringValue.includes('\n') || stringValue.includes('"') 
+        ? `"${stringValue}"` 
+        : stringValue
+    }).join(',')
+  )
+  return [csvHeaders, ...csvRows].join('\n')
+}
+
+// Função para fazer download do CSV
+const downloadCSV = (csvContent: string, filename: string) => {
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  const url = URL.createObjectURL(blob)
+  link.setAttribute('href', url)
+  link.setAttribute('download', filename)
+  link.style.visibility = 'hidden'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+// Função para exportar pagamentos
+const exportPaymentsCSV = () => {
+  const data = filteredPayments.value.map(payment => ({
+    'ID': payment.id,
+    'Empresa': payment.company,
+    'Descrição': payment.description,
+    'Valor Original': payment.amount,
+    'Moeda': payment.currency.code,
+    'Valor em BRL': convertToBRL(payment.amount, payment.currency).toFixed(2),
+    'Data': payment.date,
+    'Status': payment.status,
+    'Categoria': payment.category
+  }))
+  
+  const headers = ['ID', 'Empresa', 'Descrição', 'Valor Original', 'Moeda', 'Valor em BRL', 'Data', 'Status', 'Categoria']
+  const csvContent = convertToCSV(data, headers)
+  downloadCSV(csvContent, `pagamentos_${new Date().toISOString().split('T')[0]}.csv`)
+}
+
+// Função para exportar profissionais por projeto
+const exportWorkersCSV = () => {
+  const data = monthlySalariesByProject.value.flatMap(project => 
+    project.workers.map(worker => ({
+      'Projeto': project.project,
+      'Nome': worker.name,
+      'Email': worker.email,
+      'Cargo': worker.role,
+      'Taxa por Hora (Original)': worker.hourlyRate,
+      'Moeda': worker.currency.code,
+      'Horas Trabalhadas': worker.hoursWorked,
+      'Salário Mensal (Original)': worker.monthlySalary.toFixed(2),
+      'Salário Mensal (BRL)': worker.monthlySalaryBRL.toFixed(2),
+      'Empresa': worker.company
+    }))
+  )
+  
+  const headers = ['Projeto', 'Nome', 'Email', 'Cargo', 'Taxa por Hora (Original)', 'Moeda', 'Horas Trabalhadas', 'Salário Mensal (Original)', 'Salário Mensal (BRL)', 'Empresa']
+  const csvContent = convertToCSV(data, headers)
+  downloadCSV(csvContent, `profissionais_${new Date().toISOString().split('T')[0]}.csv`)
+}
+
+// Função para exportar análise de lucros
+const exportProfitsCSV = () => {
+  const data = profitsByCompany.value.map(company => ({
+    'Empresa': company.company,
+    'Receita Total (BRL)': company.revenue.toFixed(2),
+    'Custos Totais (BRL)': company.costs.toFixed(2),
+    'Lucro (BRL)': company.profit.toFixed(2),
+    'Margem de Lucro (%)': company.profitMargin.toFixed(2)
+  }))
+  
+  const headers = ['Empresa', 'Receita Total (BRL)', 'Custos Totais (BRL)', 'Lucro (BRL)', 'Margem de Lucro (%)']
+  const csvContent = convertToCSV(data, headers)
+  downloadCSV(csvContent, `analise_lucros_${new Date().toISOString().split('T')[0]}.csv`)
+}
+
+// Função para exportar faturas
+const exportInvoicesCSV = () => {
+  const data = filteredInvoices.value.map(invoice => ({
+    'ID': invoice.id,
+    'Empresa': invoice.company,
+    'Cliente': invoice.client,
+    'Valor Original': invoice.amount,
+    'Moeda': invoice.currency.code,
+    'Valor em BRL': convertToBRL(invoice.amount, invoice.currency).toFixed(2),
+    'Data de Vencimento': invoice.dueDate,
+    'Status': invoice.status,
+    'Descrição': invoice.description
+  }))
+  
+  const headers = ['ID', 'Empresa', 'Cliente', 'Valor Original', 'Moeda', 'Valor em BRL', 'Data de Vencimento', 'Status', 'Descrição']
+  const csvContent = convertToCSV(data, headers)
+  downloadCSV(csvContent, `faturas_${new Date().toISOString().split('T')[0]}.csv`)
+}
+
+// Função para exportar relatório completo (todos os dados)
+const exportCompleteReportCSV = () => {
+  // Criar um relatório resumido com informações principais
+  const summaryData = [{
+    'Total de Pagamentos': filteredPayments.value.length,
+    'Total em BRL': totalInBRL.value.toFixed(2),
+    'Total de Profissionais': filteredWorkers.value.length,
+    'Custo Mensal Total': totalMonthlyCosts.value.toFixed(2),
+    'Receita Total': totalProjectRevenue.value.toFixed(2),
+    'Lucro Total': totalProfit.value.toFixed(2),
+    'Margem de Lucro Geral (%)': overallProfitMargin.value.toFixed(2),
+    'Data do Relatório': new Date().toLocaleString('pt-BR'),
+    'Filtros Aplicados': hasActiveFilters.value ? `Moeda: ${selectedCurrency.value}, Empresa: ${selectedCompany.value}` : 'Nenhum filtro aplicado'
+  }]
+  
+  const headers = ['Total de Pagamentos', 'Total em BRL', 'Total de Profissionais', 'Custo Mensal Total', 'Receita Total', 'Lucro Total', 'Margem de Lucro Geral (%)', 'Data do Relatório', 'Filtros Aplicados']
+  const csvContent = convertToCSV(summaryData, headers)
+  downloadCSV(csvContent, `relatorio_completo_${new Date().toISOString().split('T')[0]}.csv`)
+}
+
+// ...existing code...
 </script>
 
 <template>
@@ -280,9 +406,14 @@ const totalProjectRevenue = computed(() => {
         <h1 class="text-3xl font-bold">Sistema Multi-Moeda</h1>
         <p class="text-muted-foreground">Dashboard de Pagamentos Globais (Base: Real Brasileiro)</p>
       </div>
-      <Button variant="outline">
-        Exportar Relatório
-      </Button>
+      <div class="flex space-x-2">
+        <Button variant="outline" @click="exportCompleteReportCSV">
+          Exportar Relatório Completo
+        </Button>
+        <Button variant="outline" @click="exportPaymentsCSV">
+          Exportar Pagamentos
+        </Button>
+      </div>
     </div>
     
     <!-- Filtros em Card -->
@@ -359,8 +490,15 @@ const totalProjectRevenue = computed(() => {
     <!-- Tabela de Pagamentos usando componentes Table -->
     <Card>
       <CardHeader>
-        <CardTitle>Pagamentos ({{ filteredPayments.length }})</CardTitle>
-        <CardDescription>Lista completa de todos os pagamentos registrados</CardDescription>
+        <div class="flex items-center justify-between">
+          <div>
+            <CardTitle>Pagamentos ({{ filteredPayments.length }})</CardTitle>
+            <CardDescription>Lista completa de todos os pagamentos registrados</CardDescription>
+          </div>
+          <Button variant="outline" size="sm" @click="exportPaymentsCSV">
+            Exportar CSV
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
@@ -423,8 +561,15 @@ const totalProjectRevenue = computed(() => {
       <!-- Card de Invoices -->
       <Card>
         <CardHeader>
-          <CardTitle>Faturas Recentes</CardTitle>
-          <CardDescription>{{ filteredInvoices.length }} faturas filtradas</CardDescription>
+          <div class="flex items-center justify-between">
+            <div>
+              <CardTitle>Faturas Recentes</CardTitle>
+              <CardDescription>{{ filteredInvoices.length }} faturas filtradas</CardDescription>
+            </div>
+            <Button variant="outline" size="sm" @click="exportInvoicesCSV">
+              Exportar CSV
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div class="space-y-4">
@@ -644,7 +789,7 @@ const totalProjectRevenue = computed(() => {
             <div class="text-sm text-muted-foreground">
               Calculado com base em {{ filteredPayments.length }} pagamentos e {{ filteredWorkers.length }} profissionais
             </div>
-            <Button variant="outline">
+            <Button variant="outline" @click="exportProfitsCSV">
               Exportar Análise Financeira
             </Button>
           </div>
@@ -875,8 +1020,8 @@ const totalProjectRevenue = computed(() => {
               Custo mensal: {{ formatCurrency(totalMonthlyCosts, { code: 'BRL' }) }} • 
               {{ filteredWorkers.length }} profissionais em {{ monthlySalariesByProject.length }} projetos
             </div>
-            <Button variant="outline">
-              Exportar Relatório Completo
+            <Button variant="outline" @click="exportWorkersCSV">
+              Exportar Profissionais
             </Button>
           </div>
         </CardFooter>
@@ -995,8 +1140,8 @@ const totalProjectRevenue = computed(() => {
             Receita total: {{ formatCurrency(totalProjectRevenue, { code: 'BRL' }) }} • 
             Custo total: {{ formatCurrency(totalMonthlyCosts, { code: 'BRL' }) }}
           </div>
-          <Button variant="outline">
-            Relatório Detalhado
+          <Button variant="outline" @click="exportCompleteReportCSV">
+            Relatório Detalhado (CSV)
           </Button>
         </div>
       </CardFooter>
