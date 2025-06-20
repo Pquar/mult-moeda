@@ -1,31 +1,31 @@
-# Sistema Multi-Moeda 💰
+# Multi-Currency System 💰
 
-Um dashboard completo para gerenciamento de pagamentos, faturas e empregados em múltiplas moedas, construído com Vue.js 3, TypeScript e Tailwind CSS.
+A complete dashboard for managing payments, invoices, and employees in multiple currencies, built with Vue.js 3, TypeScript, and Tailwind CSS.
 
-- **3 Moedas Suportadas**: USD, EUR, BRL
-- **Moeda Base**: Real Brasileiro (BRL)
-- **Conversão Automática**: Todos os valores convertidos para BRL para comparação
-- **Filtros por Moeda**: Visualize pagamentos por moeda específica
-- **Pagamentos**  os calculos do dashboard sao baseado no pagamento
-- **Faturas** vinculadas aos empregados
-- **Empregados** com diferentes cargos:
-  - Programador Full Stack
-  - Desenvolvedor Backend
-  - Desenvolvedor Frontend
-  - Desenvolvedor Mobile
+- **3 Supported Currencies**: USD, EUR, BRL
+- **Base Currency**: Brazilian Real (BRL)
+- **Automatic Conversion**: All values converted to BRL for comparison
+- **Currency Filters**: View payments by specific currency
+- **Payments**: Dashboard calculations are based on payments
+- **Invoices**: Linked to employees
+- **Employees** with different roles:
+  - Full Stack Developer
+  - Backend Developer
+  - Frontend Developer
+  - Mobile Developer
   - Product Manager (PM)
-  - Analista de Qualidade (Q&A)
+  - Quality Analyst (Q&A)
 
-### Dashboard Interativo
-- **Filtros Dinâmicos**: Por moeda e empresa
-- **Estatísticas em Tempo Real**: Totais por moeda e conversões
-- **Tabelas Responsivas**: Visualização completa dos dados
-- **Exportação de Dados**: CSV para análises externas
+### Interactive Dashboard
+- **Dynamic Filters**: By currency and company
+- **Real-Time Statistics**: Totals by currency and conversions
+- **Responsive Tables**: Complete data visualization
+- **Data Export**: CSV for external analysis
 
-### Tecnologias
+### Technologies
 
-- **Vue.js 3** com Composition API
-- **TypeScript** para tipagem forte
-- **Tailwind CSS** para estilização
-- **Vite** como bundler
-- **shadcn/ui** (adaptado para Vue) para componentes
+- **Vue.js 3** with Composition API
+- **TypeScript** for strong typing
+- **Tailwind CSS** for styling
+- **Vite** as bundler
+- **shadcn/ui** (adapted for Vue) for components
