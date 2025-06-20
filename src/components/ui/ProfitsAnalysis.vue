@@ -43,7 +43,8 @@
               </div>
             </TableCell>
             <TableCell class="text-right">
-              <div class="font-bold" :class="{
+              <div
+class="font-bold" :class="{
                 'text-green-600': company.profit >= 0,
                 'text-red-600': company.profit < 0
               }">
@@ -51,7 +52,8 @@
               </div>
             </TableCell>
             <TableCell class="text-right">
-              <span class="font-medium" :class="{
+              <span
+class="font-medium" :class="{
                 'text-green-600': company.profitMargin >= 20,
                 'text-yellow-600': company.profitMargin >= 10 && company.profitMargin < 20,
                 'text-red-600': company.profitMargin < 10
@@ -60,7 +62,8 @@
               </span>
             </TableCell>
             <TableCell class="text-center">
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="{
+              <span
+class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="{
                 'bg-green-100 text-green-800': company.profitMargin >= 20,
                 'bg-yellow-100 text-yellow-800': company.profitMargin >= 10 && company.profitMargin < 20,
                 'bg-orange-100 text-orange-800': company.profitMargin >= 0 && company.profitMargin < 10,
@@ -104,7 +107,6 @@ import TableRow from '@/components/ui/TableRow.vue'
 import TableHead from '@/components/ui/TableHead.vue'
 import TableCell from '@/components/ui/TableCell.vue'
 
-// Props
 interface Props {
   profitsByCompany: any[]
   filteredWorkers: any[]
@@ -115,7 +117,6 @@ interface Props {
 
 defineProps<Props>()
 
-// Emits
 defineEmits<{
   exportProfits: []
 }>()

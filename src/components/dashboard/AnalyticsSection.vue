@@ -1,8 +1,6 @@
 <template>
   <div class="space-y-6">
-    <!-- Cards de Analytics -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <!-- Total de Pagamentos -->
       <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
@@ -15,12 +13,11 @@
         </div>
       </div>
 
-      <!-- Total em BRL -->
       <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-gray-600">Total Geral (BRL)</p>
-            <p class="text-2xl font-bold text-green-600">{{ formatCurrency(totalInBRL, { code: 'BRL' }) }}</p>
+            <p class="text-sm font-medium text-gray-600">Total Geral ({{ baseCurrency }})</p>
+            <p class="text-2xl font-bold text-green-600">{{ formatCurrency(totalInBaseCurrency, { code: baseCurrency }) }}</p>
           </div>
 
         </div>
@@ -32,7 +29,6 @@
         </div>
       </div>
 
-      <!-- Total de Profissionais -->
       <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
@@ -45,7 +41,6 @@
         </div>
       </div>
 
-      <!-- Total de Faturas -->
       <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
@@ -59,7 +54,6 @@
       </div>
     </div>
 
-    <!-- Estatísticas por Moeda -->
     <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
       <div class="p-6 border-b border-gray-200">
         <h3 class="text-lg font-semibold text-gray-900">Distribuição por Moeda</h3>
@@ -104,15 +98,13 @@
               </div>
             </div>
             
-            <!-- Equivalência em BRL -->
             <div class="mt-3 pt-3 border-t border-gray-100">
-              <p class="text-xs text-gray-500">Equivalente em BRL:</p>
+              <p class="text-xs text-gray-500">Equivalente em {{ baseCurrency }}:</p>
               <p class="text-sm font-medium text-gray-700">
-                {{ formatCurrency(stat.totalBRL, { code: 'BRL' }) }}
+                {{ formatCurrency(stat.totalInBaseCurrency, { code: baseCurrency }) }}
               </p>
             </div>
 
-            <!-- Barra de progresso visual -->
             <div class="mt-3">
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div 
@@ -123,12 +115,12 @@
                     'bg-yellow-500': stat.currency.code === 'BRL'
                   }"
                   :style="{ 
-                    width: `${totalInBRL > 0 ? (stat.totalBRL / totalInBRL * 100) : 0}%` 
+                    width: `${totalInBaseCurrency > 0 ? (stat.totalInBaseCurrency / totalInBaseCurrency * 100) : 0}%` 
                   }"
                 ></div>
               </div>
               <p class="text-xs text-gray-500 mt-1">
-                {{ totalInBRL > 0 ? (stat.totalBRL / totalInBRL * 100).toFixed(1) : '0.0' }}% do total
+                {{ totalInBaseCurrency > 0 ? (stat.totalInBaseCurrency / totalInBaseCurrency * 100).toFixed(1) : '0.0' }}% do total
               </p>
             </div>
           </div>
@@ -136,7 +128,6 @@
       </div>
     </div>
 
-    <!-- Gráfico de Tendências Simples -->
     <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
       <div class="p-6 border-b border-gray-200">
         <h3 class="text-lg font-semibold text-gray-900">Resumo Visual</h3>
@@ -157,7 +148,7 @@
               <div class="flex items-center justify-between text-sm mb-1">
                 <span class="text-gray-600">{{ stat.count }} pagamentos</span>
                 <span class="font-medium text-gray-900">
-                  {{ formatCurrency(stat.totalBRL, { code: 'BRL' }) }}
+                  {{ formatCurrency(stat.totalInBaseCurrency, { code: baseCurrency }) }}
                 </span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-3">
@@ -169,7 +160,7 @@
                     'bg-yellow-500': stat.currency.code === 'BRL'
                   }"
                   :style="{ 
-                    width: `${totalInBRL > 0 ? (stat.totalBRL / totalInBRL * 100) : 0}%` 
+                    width: `${totalInBaseCurrency > 0 ? (stat.totalInBaseCurrency / totalInBaseCurrency * 100) : 0}%` 
                   }"
                 ></div>
               </div>
@@ -209,10 +200,13 @@ interface CurrencyStats {
   count: number
   total: number
   totalBRL: number
+  totalInBaseCurrency: number
 }
 
 interface Props {
   totalInBRL: number
+  totalInBaseCurrency: number
+  baseCurrency: string
   filteredPayments: Payment[]
   filteredWorkers: Worker[]
   filteredInvoices: Invoice[]
@@ -222,5 +216,3 @@ interface Props {
 
 defineProps<Props>()
 </script>
-
-<!-- AnalyticsSection uses only Tailwind CSS -->

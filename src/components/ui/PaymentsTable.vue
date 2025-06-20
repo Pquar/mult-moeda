@@ -39,7 +39,8 @@
               </div>
             </TableCell>
             <TableCell>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+              <span
+class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                     :class="{
                       'bg-green-100 text-green-800': payment.currency.code === 'USD',
                       'bg-blue-100 text-blue-800': payment.currency.code === 'EUR',
@@ -49,7 +50,8 @@
               </span>
             </TableCell>
             <TableCell>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+              <span
+class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                     :class="{
                       'bg-green-100 text-green-800': payment.status === 'success',
                       'bg-yellow-100 text-yellow-800': payment.status === 'pending',
@@ -82,7 +84,6 @@ import TableRow from '@/components/ui/TableRow.vue'
 import TableHead from '@/components/ui/TableHead.vue'
 import TableCell from '@/components/ui/TableCell.vue'
 
-// Props
 interface Props {
   filteredPayments: any[]
   formatCurrency: (amount: number, currency: any) => string
@@ -91,7 +92,6 @@ interface Props {
 
 defineProps<Props>()
 
-// Emits
 defineEmits<{
   exportPayments: []
 }>()

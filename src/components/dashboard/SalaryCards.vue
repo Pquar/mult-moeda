@@ -1,8 +1,6 @@
 <template>
   <div class="space-y-6">
-    <!-- Cards de Resumo Salarial -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-      <!-- Custo Mensal Total -->
       <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
@@ -21,7 +19,6 @@
         </div>
       </div>
 
-      <!-- Custo Médio por Projeto -->
       <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
@@ -37,7 +34,6 @@
         </div>
       </div>
 
-      <!-- Maior Salário -->
       <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
@@ -57,7 +53,6 @@
         </div>
       </div>
 
-      <!-- Total de Profissionais -->
       <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div class="flex items-center justify-between">
           <div>
@@ -93,5 +88,3 @@ interface Props {
 
 defineProps<Props>()
 </script>
-
-<!-- SalaryCards uses only Tailwind CSS -->

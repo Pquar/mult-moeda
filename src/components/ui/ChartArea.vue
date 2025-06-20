@@ -139,7 +139,6 @@ const handleMouseOut = () => {
       :height="height" 
       class="bg-gray-50 rounded-lg"
     >
-      <!-- Grid lines -->
       <g class="grid">
         <line
           v-for="tick in yAxisTicks"
@@ -153,7 +152,6 @@ const handleMouseOut = () => {
         />
       </g>
       
-      <!-- Y Axis -->
       <g class="y-axis">
         <line
           :x1="padding.left"
@@ -175,7 +173,6 @@ const handleMouseOut = () => {
         </text>
       </g>
       
-      <!-- X Axis -->
       <g class="x-axis">
         <line
           :x1="padding.left"
@@ -197,7 +194,6 @@ const handleMouseOut = () => {
         </text>
       </g>
       
-      <!-- Area -->
       <path
         :d="pathData"
         :fill="color"
@@ -205,7 +201,6 @@ const handleMouseOut = () => {
         class="transition-opacity duration-200 ease-in-out"
       />
       
-      <!-- Line -->
       <path
         :d="lineData"
         :stroke="color"
@@ -214,7 +209,6 @@ const handleMouseOut = () => {
         class="transition-all duration-200 ease-in-out"
       />
       
-      <!-- Data points -->
       <g class="data-points">
         <circle
           v-for="(point, index) in points"
@@ -238,5 +232,3 @@ const handleMouseOut = () => {
     />
   </div>
 </template>
-
-<!-- ChartArea uses only Tailwind CSS -->

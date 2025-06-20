@@ -1,6 +1,6 @@
 <template>
     <div class="space-y-6">
-        <!-- Header com ações -->
+        
         <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
             <div class="flex items-center justify-between">
                 <div>
@@ -10,13 +10,15 @@
                     </p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button @click="$emit('exportProfits')"
-                        class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button
+class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        @click="$emit('exportProfits')">
                         <i class="fas fa-chart-line w-4 h-4 mr-2"></i>
                         Exportar Análise
                     </button>
-                    <button @click="$emit('exportWorkers')"
-                        class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button
+class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        @click="$emit('exportWorkers')">
                         <i class="fas fa-users w-4 h-4 mr-2"></i>
                         Exportar Profissionais
                     </button>
@@ -24,9 +26,9 @@
             </div>
         </div>
 
-        <!-- Cards de Resumo Financeiro -->
+        
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <!-- Receita Total -->
+            
             <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div>
@@ -43,7 +45,7 @@
                 </div>
             </div>
 
-            <!-- Custos Totais -->
+            
             <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div>
@@ -59,7 +61,7 @@
                 </div>
             </div>
 
-            <!-- Lucro Total -->
+            
             <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div>
@@ -71,7 +73,8 @@
 
                 </div>
                 <div class="mt-4">
-                    <span class="text-sm flex items-center"
+                    <span
+class="text-sm flex items-center"
                         :class="totalProfit >= 0 ? 'text-green-600' : 'text-red-600'">
                         <i :class="totalProfit >= 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down'" class="text-xs mr-1"></i>
                         {{ overallProfitMargin.toFixed(1) }}% margem de lucro
@@ -79,12 +82,13 @@
                 </div>
             </div>
 
-            <!-- Margem de Lucro -->
+            
             <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-600">Margem de Lucro</p>
-                        <p class="text-2xl font-bold" :class="{
+                        <p
+class="text-2xl font-bold" :class="{
                             'text-green-600': overallProfitMargin >= 20,
                             'text-yellow-600': overallProfitMargin >= 10 && overallProfitMargin < 20,
                             'text-red-600': overallProfitMargin < 10
@@ -100,7 +104,7 @@
             </div>
         </div>
 
-        <!-- Análise por Empresa -->
+        
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
             <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
@@ -128,11 +132,12 @@
                 </div>
 
                 <div v-else class="space-y-6">
-                    <!-- Top 5 empresas em gráfico visual -->
-                    <div v-for="company in profitsByCompany.slice(0, 5)" :key="company.company"
+                    
+                    <div
+v-for="company in profitsByCompany.slice(0, 5)" :key="company.company"
                         class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
 
-                        <!-- Header da empresa -->
+                        
                         <div class="flex items-center justify-between mb-4">
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-900">{{ company.company }}</h4>
@@ -141,7 +146,8 @@
                                 </p>
                             </div>
                             <div class="text-right">
-                                <div class="text-2xl font-bold"
+                                <div
+class="text-2xl font-bold"
                                     :class="company.profit >= 0 ? 'text-green-600' : 'text-red-600'">
                                     {{ formatCurrency(company.profit, { code: 'BRL' }) }}
                                 </div>
@@ -149,7 +155,7 @@
                             </div>
                         </div>
 
-                        <!-- Métricas financeiras -->
+                        
                         <div class="grid grid-cols-3 gap-4 mb-4">
                             <div class="text-center">
                                 <div class="text-lg font-semibold text-green-600">
@@ -164,7 +170,8 @@
                                 <div class="text-xs text-gray-500">Custos</div>
                             </div>
                             <div class="text-center">
-                                <div class="text-lg font-semibold" :class="{
+                                <div
+class="text-lg font-semibold" :class="{
                                     'text-green-600': company.profitMargin >= 20,
                                     'text-yellow-600': company.profitMargin >= 10 && company.profitMargin < 20,
                                     'text-red-600': company.profitMargin < 10
@@ -175,13 +182,14 @@
                             </div>
                         </div>
 
-                        <!-- Barras visuais -->
+                        
                         <div class="space-y-3">
-                            <!-- Receita -->
+                            
                             <div class="flex items-center space-x-3">
                                 <div class="w-16 text-xs text-gray-600">Receita</div>
                                 <div class="flex-1 bg-gray-200 rounded-full h-4 relative">
-                                    <div class="bg-green-500 h-4 rounded-full transition-all duration-500"
+                                    <div
+class="bg-green-500 h-4 rounded-full transition-all duration-500"
                                         :style="{ width: `${Math.min((company.revenue / Math.max(...profitsByCompany.map(c => c.revenue))) * 100, 100)}%` }">
                                     </div>
                                     <span
@@ -191,11 +199,12 @@
                                 </div>
                             </div>
 
-                            <!-- Custos -->
+                            
                             <div class="flex items-center space-x-3">
                                 <div class="w-16 text-xs text-gray-600">Custos</div>
                                 <div class="flex-1 bg-gray-200 rounded-full h-4 relative">
-                                    <div class="bg-red-500 h-4 rounded-full transition-all duration-500"
+                                    <div
+class="bg-red-500 h-4 rounded-full transition-all duration-500"
                                         :style="{ width: `${Math.min((company.costs / Math.max(...profitsByCompany.map(c => c.revenue))) * 100, 100)}%` }">
                                     </div>
                                     <span
@@ -205,11 +214,12 @@
                                 </div>
                             </div>
 
-                            <!-- Lucro -->
+                            
                             <div class="flex items-center space-x-3">
                                 <div class="w-16 text-xs text-gray-600">Lucro</div>
                                 <div class="flex-1 bg-gray-200 rounded-full h-4 relative">
-                                    <div class="h-4 rounded-full transition-all duration-500"
+                                    <div
+class="h-4 rounded-full transition-all duration-500"
                                         :class="company.profit >= 0 ? 'bg-green-600' : 'bg-red-600'"
                                         :style="{ width: `${Math.min(Math.abs(company.profit) / Math.max(...profitsByCompany.map(c => Math.abs(c.profit))) * 100, 100)}%` }">
                                     </div>
@@ -221,9 +231,9 @@
                             </div>
                         </div>
 
-                        <!-- Status badge -->
                         <div class="mt-4 flex justify-end">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" :class="{
+                            <span
+class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" :class="{
                                 'bg-green-100 text-green-800': company.profitMargin >= 20,
                                 'bg-yellow-100 text-yellow-800': company.profitMargin >= 10 && company.profitMargin < 20,
                                 'bg-orange-100 text-orange-800': company.profitMargin >= 0 && company.profitMargin < 10,
@@ -296,5 +306,3 @@ defineEmits<{
     exportWorkers: []
 }>()
 </script>
-
-<!-- ProfitsSection uses only Tailwind CSS -->

@@ -42,5 +42,3 @@ defineProps<Props>()
     </div>
   </div>
 </template>
-
-<!-- ChartTooltip uses only Tailwind CSS -->

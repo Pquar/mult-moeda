@@ -48,34 +48,31 @@ type Currency = {
   value: number
 }
 
-// Definição das moedas (BRL como base)
 export const currencies: Currency[] = [
   {
     code: "USD",
     symbol: "USD",
     name: "US Dollar",
-    value: 0.20  // 1 BRL = 0.20 USD (1 USD = 5 BRL aproximadamente)
+    value: 0.18 
   },
   {
     code: "EUR", 
     symbol: "EUR",
     name: "Euro",
-    value: 0.18  // 1 BRL = 0.18 EUR (1 EUR = 5.5 BRL aproximadamente)
+    value: 0.16
   },
   {
     code: "BRL",
     symbol: "BRL",
     name: "Brazilian Real",
-    value: 1.0   // Moeda base
+    value: 1.0
   }
 ]
 
-// Helper function para obter moeda
 const getCurrency = (symbol: "USD" | "EUR" | "BRL"): Currency => {
   return currencies.find(c => c.symbol === symbol)!
 }
 
-// 10 Pagamentos de diferentes empresas
 export const payments: Payment[] = [
     {
         id: "pay_001",
@@ -219,7 +216,6 @@ export const payments: Payment[] = [
     }
 ]
 
-// 20 Empregadores com diferentes cargos
 export const workers: Worker[] = [
   {
     id: "emp_001",
@@ -423,7 +419,6 @@ export const workers: Worker[] = [
   }
 ]
 
-// 10 Invoices (Faturas)
 export const invoices: Invoice[] = [
     {
         id: "inv_001",

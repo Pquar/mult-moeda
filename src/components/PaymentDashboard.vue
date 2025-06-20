@@ -9,28 +9,29 @@ import TeamSection from '@/components/dashboard/TeamSection.vue'
 import SalaryTable from '@/components/dashboard/SalaryTable.vue'
 import InvoicesSection from '@/components/dashboard/InvoicesSection.vue'
 
-// Importar todo o estado e lógica de negócio do store centralizado
 import {
-  // Estados dos filtros
   selectedCurrency,
   selectedCompany,
   selectedSubsidiaryCompany,
+  baseCurrency,
   
-  // Funções utilitárias
   formatCurrency,
   convertToBRL,
   clearFilters,
+  currencyRates,
+  updateCurrencyRate,
+  resetCurrencyRates,
   
-  // Dados computados principais
+
   filteredPayments,
   filteredWorkers,
   filteredInvoices,
   totalInBRL,
+  totalInBaseCurrency,
   allCompanies,
   allSubsidiaryCompanies,
   hasActiveFilters,
   
-  // Estatísticas e análises
   statsByCurrency,
   uniqueCompanies,
   uniqueRoles,
@@ -40,14 +41,13 @@ import {
   totalCosts,
   overallProfitMargin,
   
-  // Dados de salários e projetos
   monthlySalariesByProject,
   totalMonthlyCosts,
   totalProjectRevenue,
   averageProjectCost,
   highestPaidWorker,
   
-  // Funções de exportação
+
   exportPayments,
   exportWorkers,
   exportProfits,
@@ -58,144 +58,140 @@ import {
 
 <template>
   <div class="min-h-screen bg-gray-50 p-8">
-    <div class="max-w-7xl mx-auto flex flex-col gap-4">
-      <!-- Header -->
+    <div class="max-w-7xl mx-auto flex flex-col gap-4"> 
       <div id="dashboard" class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900">Dashboard Financeiro</h1>
         <p class="text-gray-600 mt-2">Sistema de gestão multi-moeda para pagamentos e análises</p>
       </div>
-
-      <!-- Filtros -->
+ 
       <FilterSection
-        v-model:selectedCurrency="selectedCurrency"
-        v-model:selectedCompany="selectedCompany"
-        v-model:selectedSubsidiaryCompany="selectedSubsidiaryCompany"
+        v-model:selected-currency="selectedCurrency"
+        v-model:selected-company="selectedCompany"
+        v-model:selected-subsidiary-company="selectedSubsidiaryCompany"
+        v-model:base-currency="baseCurrency"
         :currencies="currencies"
-        :allCompanies="allCompanies"
-        :allSubsidiaryCompanies="allSubsidiaryCompanies"
-        :hasActiveFilters="hasActiveFilters"
-        @clearFilters="clearFilters"
+        :all-companies="allCompanies"
+        :all-subsidiary-companies="allSubsidiaryCompanies"
+        :has-active-filters="hasActiveFilters"
+        :currency-rates="currencyRates"
+        @update:currency-rate="updateCurrencyRate"
+        @reset-currency-rates="resetCurrencyRates"
+        @clear-filters="clearFilters"
       />
-
-      <!-- Analytics Section -->
+ 
       <section id="analytics">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-xl font-bold text-gray-900">Análise de Faturamento</h2>
         </div>
         <AnalyticsSection
-          :statsByCurrency="statsByCurrency"
-          :totalInBRL="totalInBRL"
-          :formatCurrency="formatCurrency"
-          :hasActiveFilters="hasActiveFilters"
-          :filteredPayments="filteredPayments"
-          :filteredWorkers="filteredWorkers"
-          :filteredInvoices="filteredInvoices"
-          @exportPayments="exportPayments"
+          :stats-by-currency="statsByCurrency"
+          :total-in-b-r-l="totalInBRL"
+          :total-in-base-currency="totalInBaseCurrency"
+          :base-currency="baseCurrency"
+          :format-currency="formatCurrency"
+          :has-active-filters="hasActiveFilters"
+          :filtered-payments="filteredPayments"
+          :filtered-workers="filteredWorkers"
+          :filtered-invoices="filteredInvoices"
+          @export-payments="exportPayments"
         />
-        
-        <!-- Gráficos de Analytics -->
+         
         <div class="mt-8">
           <AnalyticsCharts
-            :totalRevenue="totalRevenue"
-            :totalCosts="totalCosts"
-            :totalProfit="totalProfit"
-            :overallProfitMargin="overallProfitMargin"
-            :profitsByCompany="profitsByCompany"
-            :formatCurrency="formatCurrency"
+            :total-revenue="totalRevenue"
+            :total-costs="totalCosts"
+            :total-profit="totalProfit"
+            :overall-profit-margin="overallProfitMargin"
+            :profits-by-company="profitsByCompany"
+            :format-currency="formatCurrency"
           />
         </div>
       </section>
-
-      <!-- Tabela de Pagamentos -->
+ 
       <section id="payments">
         <PaymentsTable
-          :filteredPayments="filteredPayments"
-          :formatCurrency="formatCurrency"
-          :convertToBRL="convertToBRL"
-          @exportPayments="exportPayments"
+          :filtered-payments="filteredPayments"
+          :format-currency="formatCurrency"
+          :convert-to-b-r-l="convertToBRL"
+          @export-payments="exportPayments"
         />
       </section>
-
-      <!-- Seção de Lucros -->
+ 
       <section id="profits">
         <ProfitsSection
-          :profitsByCompany="profitsByCompany"
-          :totalProfit="totalProfit"
-          :totalRevenue="totalRevenue"
-          :totalCosts="totalCosts"
-          :overallProfitMargin="overallProfitMargin"
-          :formatCurrency="formatCurrency"
-          :filteredPayments="filteredPayments"
-          :filteredWorkers="filteredWorkers"
-          :hasActiveFilters="hasActiveFilters"
-          @exportProfits="exportProfits"
+          :profits-by-company="profitsByCompany"
+          :total-profit="totalProfit"
+          :total-revenue="totalRevenue"
+          :total-costs="totalCosts"
+          :overall-profit-margin="overallProfitMargin"
+          :format-currency="formatCurrency"
+          :filtered-payments="filteredPayments"
+          :filtered-workers="filteredWorkers"
+          :has-active-filters="hasActiveFilters"
+          @export-profits="exportProfits"
         />
       </section>
-
-      <!-- Seção da Equipe -->
+ 
       <section id="team">
         <TeamSection
-          :filteredWorkers="filteredWorkers"
-          :filteredInvoices="filteredInvoices"
-          :uniqueCompanies="uniqueCompanies"
-          :uniqueRoles="uniqueRoles"
-          :formatCurrency="formatCurrency"
-          @exportWorkers="exportWorkers"
+          :filtered-workers="filteredWorkers"
+          :filtered-invoices="filteredInvoices"
+          :unique-companies="uniqueCompanies"
+          :unique-roles="uniqueRoles"
+          :format-currency="formatCurrency"
+          @export-workers="exportWorkers"
         />
       </section>
-
-      <!-- Faturas -->
+ 
       <InvoicesSection
-        :selectedCurrency="selectedCurrency"
-        :selectedCompany="selectedCompany"
-        :formatCurrency="formatCurrency"
-        :convertToBRL="convertToBRL"
+        :selected-currency="selectedCurrency"
+        :selected-company="selectedCompany"
+        :format-currency="formatCurrency"
+        :convert-to-b-r-l="convertToBRL"
       />
-
-      <!-- Tabela de Salários -->
+ 
       <section id="salaries">
         <SalaryTable
-          :monthlySalariesByProject="monthlySalariesByProject"
-          :totalProjectRevenue="totalProjectRevenue"
-          :totalMonthlyCosts="totalMonthlyCosts"
-          :averageProjectCost="averageProjectCost"
-          :highestPaidWorker="highestPaidWorker"
-          :filteredWorkers="filteredWorkers"
-          :hasActiveFilters="hasActiveFilters"
-          :formatCurrency="formatCurrency"
-          @exportWorkers="exportWorkers"
+          :monthly-salaries-by-project="monthlySalariesByProject"
+          :total-project-revenue="totalProjectRevenue"
+          :total-monthly-costs="totalMonthlyCosts"
+          :average-project-cost="averageProjectCost"
+          :highest-paid-worker="highestPaidWorker"
+          :filtered-workers="filteredWorkers"
+          :has-active-filters="hasActiveFilters"
+          :format-currency="formatCurrency"
+          @export-workers="exportWorkers"
         />
       </section>
-
-      <!-- Relatórios -->
+ 
       <section id="reports" class="mb-8">
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-4">Relatórios Disponíveis</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <button
-              @click="exportPayments"
               class="flex items-center justify-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              @click="exportPayments"
             >
               <i class="fas fa-file-alt text-blue-600"></i>
               <span>Relatório de Pagamentos</span>
             </button>
             <button
-              @click="exportProfits"
               class="flex items-center justify-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              @click="exportProfits"
             >
               <i class="fas fa-calculator text-green-600"></i>
               <span>Análise de Custos</span>
             </button>
             <button
-              @click="exportAnalytics"
               class="flex items-center justify-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              @click="exportAnalytics"
             >
               <i class="fas fa-chart-pie text-purple-600"></i>
               <span>Analytics por Moeda</span>
             </button>
             <button
-              @click="exportFullReport"
               class="flex items-center justify-center gap-2 p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              @click="exportFullReport"
             >
               <i class="fas fa-file-download text-orange-600"></i>
               <span>Relatório Completo</span>
@@ -206,5 +202,3 @@ import {
     </div>
   </div>
 </template>
-
-<!-- PaymentDashboard uses only Tailwind CSS -->

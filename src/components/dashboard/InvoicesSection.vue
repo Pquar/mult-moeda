@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { invoices } from '@/lib/payments'
 import ChartArea from '@/components/ui/ChartArea.vue'
 
-// Props
+
 const props = defineProps<{
   selectedCurrency: string
   selectedCompany: string
@@ -11,11 +11,10 @@ const props = defineProps<{
   convertToBRL: (amount: number, currency: any) => number
 }>()
 
-// Estado para filtros de faturas
+
 const invoicesPeriod = ref<'day' | 'week' | 'month'>('month')
 const selectedMonth = ref<string>('')
 
-// Faturas filtradas baseadas nos props do componente pai
 const filteredInvoices = computed(() => {
   return invoices.filter(invoice => {
     const currencyMatch = props.selectedCurrency === 'all' || invoice.currency.code === props.selectedCurrency
@@ -24,7 +23,6 @@ const filteredInvoices = computed(() => {
   })
 })
 
-// Meses disponíveis baseado nas faturas
 const availableMonths = computed(() => {
   const months = new Set<string>()
   
@@ -34,7 +32,7 @@ const availableMonths = computed(() => {
     months.add(monthKey)
   })
   
-  // Adicionar últimos 12 meses mesmo se não houver dados
+
   const now = new Date()
   for (let i = 0; i < 12; i++) {
     const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
@@ -57,11 +55,11 @@ const availableMonths = computed(() => {
     })
 })
 
-// Dados para o gráfico de faturas baseado no período selecionado
+
 const invoicesChartData = computed(() => {
   const periodData: { [key: string]: number } = {}
   
-  // Filtrar faturas por mês se selecionado (apenas para visualização diária)
+  
   let invoicesToProcess = filteredInvoices.value
   if (selectedMonth.value && invoicesPeriod.value === 'day') {
     invoicesToProcess = filteredInvoices.value.filter(invoice => {
@@ -71,7 +69,7 @@ const invoicesChartData = computed(() => {
     })
   }
   
-  // Processar faturas
+  
   invoicesToProcess.forEach(invoice => {
     const date = new Date(invoice.issueDate)
     let periodKey: string
@@ -90,7 +88,7 @@ const invoicesChartData = computed(() => {
     periodData[periodKey] = (periodData[periodKey] || 0) + amountInBRL
   })
   
-  // Gerar períodos
+  
   const now = new Date()
   const periods = []
   
@@ -169,7 +167,7 @@ const invoicesChartData = computed(() => {
   return periods
 })
 
-// Função de export para dados do gráfico
+
 const exportInvoicesChart = () => {
   const csvData = invoicesChartData.value.map(item => ({
     'Período': item.label,
@@ -184,7 +182,7 @@ const exportInvoicesChart = () => {
   downloadCSV(csvData, filename)
 }
 
-// Função auxiliar para download de CSV
+
 const downloadCSV = (data: any[], filename: string) => {
   if (data.length === 0) return
   
@@ -233,49 +231,47 @@ const downloadCSV = (data: any[], filename: string) => {
         </div>
       </div>
       
-      <!-- Controles de Filtro -->
       <div class="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-4">
             <label class="text-sm font-medium text-gray-700">Visualizar por:</label>
             <div class="flex items-center gap-2">
               <button
-                @click="invoicesPeriod = 'day'"
                 :class="[
                   'px-3 py-1.5 text-sm rounded-md transition-colors',
                   invoicesPeriod === 'day' 
                     ? 'bg-blue-600 text-white' 
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 ]"
+                @click="invoicesPeriod = 'day'"
               >
                 Dia
               </button>
               <button
-                @click="invoicesPeriod = 'week'"
                 :class="[
                   'px-3 py-1.5 text-sm rounded-md transition-colors',
                   invoicesPeriod === 'week' 
                     ? 'bg-blue-600 text-white' 
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 ]"
+                @click="invoicesPeriod = 'week'"
               >
                 Semana
               </button>
               <button
-                @click="invoicesPeriod = 'month'"
                 :class="[
                   'px-3 py-1.5 text-sm rounded-md transition-colors',
                   invoicesPeriod === 'month' 
                     ? 'bg-blue-600 text-white' 
                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 ]"
+                @click="invoicesPeriod = 'month'"
               >
                 Mês
               </button>
             </div>
           </div>
           
-          <!-- Filtro de Mês Específico (apenas para visualização diária) -->
           <div v-if="invoicesPeriod === 'day'" class="flex items-center gap-2">
             <label class="text-sm font-medium text-gray-700">Mês específico:</label>
             <select 
@@ -296,8 +292,8 @@ const downloadCSV = (data: any[], filename: string) => {
         
         <div class="flex items-center gap-3">
           <button
-            @click="exportInvoicesChart"
             class="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
+            @click="exportInvoicesChart"
           >
             Exportar Dados do Gráfico
           </button>
@@ -311,7 +307,7 @@ const downloadCSV = (data: any[], filename: string) => {
           :height="300"
           color="#10b981"
           :title="`Faturamento ${invoicesPeriod === 'day' ? 'Diário' : invoicesPeriod === 'week' ? 'Semanal' : 'Mensal'} (BRL)`"
-          yAxisLabel="Valor em BRL"
+          y-axis-label="Valor em BRL"
         />
       </div>
     </div>

@@ -3,25 +3,19 @@ import { ref, provide } from 'vue'
 import AppSidebar from '@/components/ui/AppSidebar.vue'
 import PaymentDashboard from '@/components/PaymentDashboard.vue'
 
-// Estado do sidebar compartilhado
 const isCollapsed = ref(false)
 
-// Fornecer o estado para o sidebar
 provide('sidebarCollapsed', { isCollapsed, toggleSidebar: () => { isCollapsed.value = !isCollapsed.value } })
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-50 flex font-sans">
-    <!-- Sidebar Fixo -->
     <AppSidebar />
-    
-    <!-- Main Content com margem dinâmica baseada no estado do sidebar -->
-    <main 
-      class="flex-1 min-w-0 overflow-hidden transition-all duration-300"
-      :class="{ 'ml-16': isCollapsed, 'ml-64': !isCollapsed }"
-    >
+
+    <main
+class="flex-1 min-w-0 overflow-hidden transition-all duration-300"
+      :class="{ 'ml-16': isCollapsed, 'ml-64': !isCollapsed }">
       <div class="relative h-screen overflow-y-auto scroll-smooth">
-        <!-- Content Header -->
         <header class="bg-white border-b border-gray-200 px-6 py-4  top-0 z-20">
           <div class="flex items-center justify-between">
             <div>
@@ -33,7 +27,6 @@ provide('sidebarCollapsed', { isCollapsed, toggleSidebar: () => { isCollapsed.va
           </div>
         </header>
 
-        <!-- Main Dashboard Content -->
         <div class="p-0">
           <PaymentDashboard />
         </div>
@@ -41,5 +34,3 @@ provide('sidebarCollapsed', { isCollapsed, toggleSidebar: () => { isCollapsed.va
     </main>
   </div>
 </template>
-
-<!-- AppLayout uses only Tailwind CSS -->

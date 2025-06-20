@@ -30,8 +30,8 @@
           </label>
           <select 
             :value="selectedCurrency" 
-            @change="$emit('update:selectedCurrency', ($event.target as HTMLSelectElement).value)"
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            @change="$emit('update:selectedCurrency', ($event.target as HTMLSelectElement).value)"
           >
             <option value="all">Todas as Moedas</option>
             <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
@@ -46,8 +46,8 @@
           </label>
           <select 
             :value="selectedCompany" 
-            @change="$emit('update:selectedCompany', ($event.target as HTMLSelectElement).value)"
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            @change="$emit('update:selectedCompany', ($event.target as HTMLSelectElement).value)"
           >
             <option value="all">Todas as Empresas</option>
             <option v-for="company in allCompanies" :key="company" :value="company">
@@ -68,7 +68,6 @@ import CardDescription from '@/components/ui/CardDescription.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import Button from '@/components/ui/Button.vue'
 
-// Props
 interface Props {
   selectedCurrency: string
   selectedCompany: string
@@ -81,7 +80,6 @@ interface Props {
 
 defineProps<Props>()
 
-// Emits
 defineEmits<{
   'update:selectedCurrency': [value: string]
   'update:selectedCompany': [value: string]

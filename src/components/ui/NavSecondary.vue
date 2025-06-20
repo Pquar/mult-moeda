@@ -29,5 +29,3 @@ defineProps<Props>()
     </div>
   </div>
 </template>
-
-<!-- NavSecondary uses only Tailwind CSS -->

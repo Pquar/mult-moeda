@@ -74,10 +74,8 @@ const handleMouseOut = () => {
         :key="index"
         class="flex flex-col items-center gap-2 min-w-[60px]"
       >
-        <!-- Coluna com overlay -->
         <div class="relative flex flex-col justify-end" :style="{ height: `${height - 80}px` }">
           <div class="w-12 relative">
-            <!-- Barra de receita (fundo) -->
             <div
               v-if="item.segments[0]"
               class="absolute bottom-0 w-full cursor-pointer transition-all duration-300 hover:brightness-110 rounded-t-md"
@@ -88,9 +86,7 @@ const handleMouseOut = () => {
               @mouseover="handleMouseOver($event, item.segments[0], item)"
               @mouseout="handleMouseOut"
             ></div>
-            
-            <!-- Barra de custos (sobreposição) -->
-            <div
+                        <div
               v-if="item.segments[1]"
               class="absolute bottom-0 w-full cursor-pointer transition-all duration-300 hover:brightness-110 rounded-t-md"
               :style="{ 
@@ -103,7 +99,6 @@ const handleMouseOut = () => {
           </div>
         </div>
         
-        <!-- Label -->
         <div v-if="showLabels" class="text-xs text-gray-600 text-center font-medium max-w-[80px] text-nowrap">
           {{ item.label }}
         </div>
@@ -118,5 +113,3 @@ const handleMouseOut = () => {
     />
   </div>
 </template>
-
-<!-- ChartStackedColumn uses only Tailwind CSS -->

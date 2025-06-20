@@ -1,6 +1,5 @@
 <template>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Card de Invoices -->
     <Card>
       <CardHeader>
         <div class="flex items-center justify-between">
@@ -19,7 +18,8 @@
           <div v-if="filteredInvoices.length === 0" class="text-center py-4 text-muted-foreground">
             Nenhuma fatura encontrada com os filtros selecionados
           </div>
-          <div v-for="invoice in filteredInvoices.slice(0, 5)" :key="invoice.id" 
+          <div
+v-for="invoice in filteredInvoices.slice(0, 5)" :key="invoice.id" 
                class="flex items-center justify-between p-3 border rounded-lg">
             <div>
               <p class="font-medium">{{ invoice.company }}</p>
@@ -27,7 +27,8 @@
             </div>
             <div class="text-right">
               <p class="font-medium">{{ formatCurrency(invoice.amount, invoice.currency) }}</p>
-              <span class="text-xs px-2 py-1 rounded-full"
+              <span
+class="text-xs px-2 py-1 rounded-full"
                     :class="{
                       'bg-green-100 text-green-800': invoice.status === 'success',
                       'bg-yellow-100 text-yellow-800': invoice.status === 'pending',
@@ -48,7 +49,6 @@
       </CardFooter>
     </Card>
 
-    <!-- Card de Empregados por Empresa -->
     <Card>
       <CardHeader>
         <CardTitle>Equipe por Empresa</CardTitle>
@@ -59,7 +59,8 @@
           <div v-if="uniqueCompanies.length === 0" class="text-center py-4 text-muted-foreground">
             Nenhuma empresa encontrada com os filtros selecionados
           </div>
-          <div v-for="company in uniqueCompanies.slice(0, 6)" :key="company" 
+          <div
+v-for="company in uniqueCompanies.slice(0, 6)" :key="company" 
                class="flex items-center justify-between">
             <span class="font-medium">{{ company }}</span>
             <div class="flex items-center space-x-2">
@@ -67,12 +68,14 @@
                 {{ filteredWorkers.filter(w => w.company === company).length }} funcionários
               </span>
               <div class="flex -space-x-1">
-                <div v-for="worker in filteredWorkers.filter(w => w.company === company).slice(0, 3)" 
+                <div
+v-for="worker in filteredWorkers.filter(w => w.company === company).slice(0, 3)" 
                      :key="worker.id"
                      class="w-6 h-6 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-xs font-medium">
                   {{ worker.name.charAt(0) }}
                 </div>
-                <div v-if="filteredWorkers.filter(w => w.company === company).length > 3"
+                <div
+v-if="filteredWorkers.filter(w => w.company === company).length > 3"
                      class="w-6 h-6 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-xs">
                   +{{ filteredWorkers.filter(w => w.company === company).length - 3 }}
                 </div>
@@ -90,7 +93,6 @@
     </Card>
   </div>
 
-  <!-- Cards de Análise por Cargo -->
   <Card class="mt-6">
     <CardHeader>
       <CardTitle>Análise por Cargo</CardTitle>
@@ -101,7 +103,8 @@
         Nenhum cargo encontrado com os filtros selecionados
       </div>
       <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div v-for="role in uniqueRoles" :key="role" 
+        <div
+v-for="role in uniqueRoles" :key="role" 
              class="text-center p-4 border rounded-lg hover:bg-gray-50 transition-colors">
           <div class="text-2xl font-bold text-blue-600">
             {{ filteredWorkers.filter(w => w.role === role).length }}
@@ -122,7 +125,6 @@ import CardContent from '@/components/ui/CardContent.vue'
 import CardFooter from '@/components/ui/CardFooter.vue'
 import Button from '@/components/ui/Button.vue'
 
-// Props
 interface Props {
   filteredInvoices: any[]
   filteredWorkers: any[]
@@ -133,7 +135,6 @@ interface Props {
 
 defineProps<Props>()
 
-// Emits
 defineEmits<{
   exportInvoices: []
 }>()

@@ -22,7 +22,6 @@ const closeDropdown = () => {
   activeDropdown.value = null
 }
 
-// Função para scroll suave
 const smoothScrollTo = (elementId: string, event: Event) => {
   event.preventDefault()
   
@@ -48,25 +47,23 @@ const smoothScrollTo = (elementId: string, event: Event) => {
         <li v-for="item in items" :key="item.name" class="list-none relative">
           <a 
             :href="item.url" 
-            @click="smoothScrollTo(item.url, $event)"
             class="w-full text-left text-gray-700 transition-all duration-200 ease-in-out border-0 bg-transparent cursor-pointer relative hover:text-gray-900 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 text-sm rounded-md group"
+            @click="smoothScrollTo(item.url, $event)"
           >
             <i :class="item.icon" class="w-4 h-4"></i>
             <span>{{ item.name }}</span>
           </a>
           
-          <!-- Dropdown Menu -->
           <div class="relative inline-block">
             <button 
-              @click="toggleDropdown(item.name)"
               class="bg-transparent border-0 cursor-pointer text-gray-600 opacity-0 group-hover:opacity-100 absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-sm hover:bg-gray-200 transition-all"
               :class="{ 'bg-gray-200': activeDropdown === item.name }"
+              @click="toggleDropdown(item.name)"
             >
               <i class="fas fa-ellipsis-h w-4 h-4"></i>
               <span class="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0">More</span>
             </button>
             
-            <!-- Dropdown Content -->
             <div 
               v-if="activeDropdown === item.name"
               class="min-w-[120px] absolute right-0 top-8 w-24 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
@@ -93,12 +90,9 @@ const smoothScrollTo = (elementId: string, event: Event) => {
     </div>
   </div>
   
-  <!-- Backdrop to close dropdown -->
   <div 
     v-if="activeDropdown" 
-    @click="closeDropdown"
     class="fixed inset-0 z-40"
+    @click="closeDropdown"
   ></div>
 </template>
-
-<!-- NavDocuments uses only Tailwind CSS -->

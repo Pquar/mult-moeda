@@ -20,7 +20,6 @@ defineProps<Props>()
 
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <!-- Total Geral -->
     <Chart 
       title="Total Geral" 
       :value="formatCurrency(totalInBRL, { code: 'BRL' })"
@@ -30,7 +29,6 @@ defineProps<Props>()
       trend-value="+12.5%"
     />
     
-    <!-- Pagamentos -->
     <Chart 
       title="Pagamentos" 
       :value="filteredPayments.length.toString()"
@@ -40,7 +38,6 @@ defineProps<Props>()
       trend-value="+5.2%"
     />
     
-    <!-- Profissionais -->
     <Chart 
       title="Profissionais" 
       :value="filteredWorkers.length.toString()"
@@ -50,7 +47,6 @@ defineProps<Props>()
       trend-value="+2.1%"
     />
     
-    <!-- Faturas -->
     <Chart 
       title="Faturas" 
       :value="filteredInvoices.length.toString()"
@@ -60,7 +56,6 @@ defineProps<Props>()
     />
   </div>
 
-  <!-- Estatísticas por Moeda -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <Chart 
       v-for="stat in statsByCurrency.filter(s => s.count > 0)" 

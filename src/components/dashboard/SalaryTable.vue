@@ -1,6 +1,5 @@
 <template>
   <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
-    <!-- Header -->
     <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
         <div>
@@ -13,8 +12,8 @@
           </p>
         </div>
         <button
-          @click="$emit('exportWorkers')"
           class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          @click="$emit('exportWorkers')"
         >
           <i class="fas fa-users w-4 h-4 mr-2"></i>
           Exportar Profissionais
@@ -22,7 +21,6 @@
       </div>
     </div>
 
-    <!-- Conteúdo -->
     <div class="p-6">
       <div v-if="monthlySalariesByProject.length === 0" class="text-center py-8">
         <div class="text-gray-500">
@@ -41,7 +39,6 @@
           class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
         >
           
-          <!-- Header do Projeto -->
           <div class="flex items-center justify-between mb-6">
             <div>
               <h3 class="text-lg font-semibold text-gray-900">{{ project.project }}</h3>
@@ -66,7 +63,6 @@
             </div>
           </div>
 
-          <!-- Lista de Profissionais -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div 
               v-for="worker in project.workers" 
@@ -107,7 +103,6 @@
             </div>
           </div>
 
-          <!-- Barra Visual da Receita do Projeto -->
           <div class="mt-6">
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm font-medium text-gray-700">Participação na receita total</span>
@@ -123,7 +118,6 @@
               </div>
             </div>
             
-            <!-- Barra adicional para lucro/prejuízo -->
             <div class="mt-4">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-medium text-gray-700">Status financeiro</span>
@@ -148,7 +142,6 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <div v-if="monthlySalariesByProject.length > 0" class="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
       <div class="flex items-center justify-between text-sm text-gray-600">
         <span>
@@ -194,7 +187,7 @@ interface Props {
   totalMonthlyCosts: number
   averageProjectCost: number
   highestPaidWorker: Worker | null
-  filteredWorkers: Array<any> // Aceita qualquer tipo de worker
+  filteredWorkers: Array<any> 
   hasActiveFilters: boolean
   formatCurrency: (amount: number, currency: any) => string
 }
@@ -205,7 +198,6 @@ defineEmits<{
   exportWorkers: []
 }>()
 
-// Função para obter iniciais do nome
 const getInitials = (name: string) => {
   return name
     .split(' ')
@@ -215,5 +207,3 @@ const getInitials = (name: string) => {
     .slice(0, 2)
 }
 </script>
-
-<!-- SalaryTable uses only Tailwind CSS -->

@@ -1,16 +1,32 @@
 import { ref, computed } from 'vue'
 import { payments, invoices, workers, currencies } from '@/lib/payments'
 
-// Estado global dos filtros
+
+const getSubsidiaryCompany = (company: string) => {
+  const payment = payments.find(p => p.company === company)
+  return payment?.subsidiaryCompany || null
+}
+
+
+export const currencyRates = ref<{ [key: string]: number }>({
+  USD: 0.18, 
+  EUR: 0.16, 
+  BRL: 1.0   
+})
+
 export const selectedCurrency = ref('all')
 export const selectedCompany = ref('all')
 export const selectedSubsidiaryCompany = ref('all')
+export const baseCurrency = ref('BRL') 
 
-// Estado para filtros de faturas
+
+export const usdRate = ref(5.50) 
+
+
 export const invoicesPeriod = ref<'day' | 'week' | 'month'>('month')
 export const selectedMonth = ref<string>('')
 
-// Função para formatar valores monetários
+
 export const formatCurrency = (amount: number, currency: any) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -19,7 +35,38 @@ export const formatCurrency = (amount: number, currency: any) => {
   }).format(amount)
 }
 
-// Função para converter valores para BRL (moeda base)
+
+export const convertToBaseCurrency = (amount: number, fromCurrency: any) => {
+  
+  if (fromCurrency.code === baseCurrency.value) {
+    return amount
+  }
+  
+  
+  let amountInBRL = amount
+  if (fromCurrency.code !== 'BRL') {
+    
+    const rate = currencyRates.value[fromCurrency.code] || fromCurrency.value
+    amountInBRL = amount / rate
+  }
+  
+  
+  if (baseCurrency.value === 'BRL') {
+    return amountInBRL
+  }
+  
+  
+  const targetRate = currencyRates.value[baseCurrency.value]
+  if (!targetRate) {
+    
+    const targetCurrency = currencies.find(c => c.code === baseCurrency.value)
+    return targetCurrency ? amountInBRL * targetCurrency.value : amountInBRL
+  }
+  
+  return amountInBRL * targetRate
+}
+
+
 export const convertToBRL = (amount: number, currency: any) => {
   if (currency.code === 'BRL') {
     return amount
@@ -27,14 +74,30 @@ export const convertToBRL = (amount: number, currency: any) => {
   return amount / currency.value
 }
 
-// Função para limpar filtros
+
 export const clearFilters = () => {
   selectedCurrency.value = 'all'
   selectedCompany.value = 'all'
   selectedSubsidiaryCompany.value = 'all'
+  
 }
 
-// Pagamentos filtrados
+
+export const updateCurrencyRate = (currencyCode: string, rate: number) => {
+  if (rate > 0) {
+    currencyRates.value[currencyCode] = rate
+  }
+}
+
+export const resetCurrencyRates = () => {
+  currencyRates.value = {
+    USD: 0.18, 
+    EUR: 0.16, 
+    BRL: 1.0
+  }
+}
+
+
 export const filteredPayments = computed(() => {
   return payments.filter(payment => {
     const currencyMatch = selectedCurrency.value === 'all' || payment.currency.code === selectedCurrency.value
@@ -44,7 +107,7 @@ export const filteredPayments = computed(() => {
   })
 })
 
-// Faturas filtradas
+
 export const filteredInvoices = computed(() => {
   return invoices.filter(invoice => {
     const currencyMatch = selectedCurrency.value === 'all' || invoice.currency.code === selectedCurrency.value
@@ -54,29 +117,37 @@ export const filteredInvoices = computed(() => {
   })
 })
 
-// Empregados filtrados
+
 export const filteredWorkers = computed(() => {
   return workers.filter(worker => {
     const currencyMatch = selectedCurrency.value === 'all' || worker.currency.code === selectedCurrency.value
     const companyMatch = selectedCompany.value === 'all' || worker.company === selectedCompany.value
-    return currencyMatch && companyMatch
+    
+    
+    const subsidiaryMatch = selectedSubsidiaryCompany.value === 'all' || 
+      getSubsidiaryCompany(worker.company) === selectedSubsidiaryCompany.value
+    
+    return currencyMatch && companyMatch && subsidiaryMatch
   })
 })
 
-// Total geral em BRL
-export const totalInBRL = computed(() => {
+
+export const totalInBaseCurrency = computed(() => {
   return filteredPayments.value.reduce((total, payment) => {
-    return total + convertToBRL(payment.amount, payment.currency)
+    return total + convertToBaseCurrency(payment.amount, payment.currency)
   }, 0)
 })
 
-// Empresas para o filtro
+
+export const totalInBRL = computed(() => totalInBaseCurrency.value)
+
+
 export const allCompanies = computed(() => {
   const companies = [...new Set(payments.map(p => p.company))]
   return companies.sort()
 })
 
-// Empresas subsidiárias para o filtro
+
 export const allSubsidiaryCompanies = computed(() => {
   const subsidiaryCompanies = [...new Set(payments.map(p => p.subsidiaryCompany))]
   return subsidiaryCompanies.map(code => {
@@ -92,12 +163,12 @@ export const allSubsidiaryCompanies = computed(() => {
   }).sort((a, b) => a.name.localeCompare(b.name))
 })
 
-// Verificar se há filtros ativos
+
 export const hasActiveFilters = computed(() => {
   return selectedCurrency.value !== 'all' || selectedCompany.value !== 'all' || selectedSubsidiaryCompany.value !== 'all'
 })
 
-// Estatísticas por moeda
+
 export const statsByCurrency = computed(() => {
   const stats = currencies.map(currency => {
     const paymentsInCurrency = filteredPayments.value.filter(p => p.currency.code === currency.code)
@@ -106,43 +177,44 @@ export const statsByCurrency = computed(() => {
       currency,
       count: paymentsInCurrency.length,
       total,
-      totalBRL: convertToBRL(total, currency)
+      totalBRL: convertToBRL(total, currency),
+      totalInBaseCurrency: convertToBaseCurrency(total, currency)
     }
   })
   return stats
 })
 
-// Empresas únicas (baseado nos dados filtrados)
+
 export const uniqueCompanies = computed(() => {
   const companies = [...new Set(filteredPayments.value.map(p => p.company))]
   return companies.sort()
 })
 
-// Cargos únicos (baseado nos empregados filtrados)
+
 export const uniqueRoles = computed(() => {
   const roles = [...new Set(filteredWorkers.value.map(w => w.role))]
   return roles.sort()
 })
 
-// Cálculo de lucros por empresa
+
 export const profitsByCompany = computed(() => {
   const companies = [...new Set(filteredPayments.value.map(p => p.company))]
   
   return companies.map(company => {
-    // Pagamentos da empresa
+    
     const companyPayments = filteredPayments.value.filter(p => p.company === company)
     const totalRevenue = companyPayments.reduce((sum, payment) => {
       return sum + convertToBRL(payment.amount, payment.currency)
     }, 0)
 
-    // Gastos com empregados da empresa
+    
     const companyWorkers = filteredWorkers.value.filter(w => w.company === company)
     const totalCosts = companyWorkers.reduce((sum, worker) => {
       const workerCost = worker.hoursWorked * worker.hourlyRate
       return sum + convertToBRL(workerCost, worker.currency)
     }, 0)
 
-    // Lucro
+    
     const profit = totalRevenue - totalCosts
     const profitMargin = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0
 
@@ -152,12 +224,12 @@ export const profitsByCompany = computed(() => {
       costs: totalCosts,
       profit,
       profitMargin,
-      currency: { code: 'BRL' } // Sempre em BRL para consistência
+      currency: { code: 'BRL' } 
     }
-  }).sort((a, b) => b.profit - a.profit) // Ordenar por lucro decrescente
+  }).sort((a, b) => b.profit - a.profit) 
 })
 
-// Totais gerais de lucro
+
 export const totalProfit = computed(() => {
   return profitsByCompany.value.reduce((sum, company) => sum + company.profit, 0)
 })
@@ -174,7 +246,7 @@ export const overallProfitMargin = computed(() => {
   return totalRevenue.value > 0 ? (totalProfit.value / totalRevenue.value) * 100 : 0
 })
 
-// Cálculo de salários mensais dos profissionais por projeto
+
 export const monthlySalariesByProject = computed(() => {
   const projects = [...new Set(filteredWorkers.value.map(w => w.company))]
   
@@ -182,7 +254,7 @@ export const monthlySalariesByProject = computed(() => {
     const projectWorkers = filteredWorkers.value.filter(w => w.company === project)
     
     const workersWithSalary = projectWorkers.map(worker => {
-      // Assumindo que hoursWorked é mensal, calculamos o salário mensal
+      
       const monthlySalary = worker.hoursWorked * worker.hourlyRate
       const monthlySalaryBRL = convertToBRL(monthlySalary, worker.currency)
       
@@ -193,7 +265,7 @@ export const monthlySalariesByProject = computed(() => {
       }
     })
     
-    // Calcular receita real do projeto vinda dos pagamentos
+    
     const projectPayments = filteredPayments.value.filter(p => p.company === project)
     const projectRevenue = projectPayments.reduce((sum, payment) => {
       return sum + convertToBRL(payment.amount, payment.currency)
@@ -211,26 +283,26 @@ export const monthlySalariesByProject = computed(() => {
       workerCount: workersWithSalary.length,
       paymentsCount: projectPayments.length
     }
-  }).sort((a, b) => b.projectRevenue - a.projectRevenue) // Ordenar por receita decrescente
+  }).sort((a, b) => b.projectRevenue - a.projectRevenue) 
 })
 
-// Totais gerais de salários mensais
+
 export const totalMonthlyCosts = computed(() => {
   return monthlySalariesByProject.value.reduce((sum, project) => sum + project.totalMonthlyCost, 0)
 })
 
-// Total de receita de projetos
+
 export const totalProjectRevenue = computed(() => {
   return monthlySalariesByProject.value.reduce((sum, project) => sum + project.projectRevenue, 0)
 })
 
-// Custo médio por projeto
+
 export const averageProjectCost = computed(() => {
   return monthlySalariesByProject.value.length > 0 ? 
     totalMonthlyCosts.value / monthlySalariesByProject.value.length : 0
 })
 
-// Profissional com maior salário
+
 export const highestPaidWorker = computed(() => {
   const allWorkers = monthlySalariesByProject.value.flatMap(p => p.workers)
   return allWorkers.length > 0 ? 
@@ -239,7 +311,7 @@ export const highestPaidWorker = computed(() => {
     ) : null
 })
 
-// Meses disponíveis baseado nas faturas
+
 export const availableMonths = computed(() => {
   const months = new Set<string>()
   
@@ -249,7 +321,7 @@ export const availableMonths = computed(() => {
     months.add(monthKey)
   })
   
-  // Adicionar últimos 12 meses mesmo se não houver dados
+  
   const now = new Date()
   for (let i = 0; i < 12; i++) {
     const date = new Date(now.getFullYear(), now.getMonth() - i, 1)
@@ -272,11 +344,11 @@ export const availableMonths = computed(() => {
     })
 })
 
-// Dados para o gráfico de faturas baseado no período selecionado
+
 export const invoicesChartData = computed(() => {
   const periodData: { [key: string]: number } = {}
   
-  // Filtrar faturas por mês se selecionado (apenas para visualização diária)
+  
   let invoicesToProcess = filteredInvoices.value
   if (selectedMonth.value && invoicesPeriod.value === 'day') {
     invoicesToProcess = filteredInvoices.value.filter(invoice => {
@@ -286,7 +358,7 @@ export const invoicesChartData = computed(() => {
     })
   }
   
-  // Processar faturas
+  
   invoicesToProcess.forEach(invoice => {
     const date = new Date(invoice.issueDate)
     let periodKey: string
@@ -305,7 +377,7 @@ export const invoicesChartData = computed(() => {
     periodData[periodKey] = (periodData[periodKey] || 0) + amountInBRL
   })
   
-  // Gerar períodos
+  
   const now = new Date()
   const periods = []
   
@@ -384,7 +456,7 @@ export const invoicesChartData = computed(() => {
   return periods
 })
 
-// Funções de exportação
+
 export const downloadCSV = (data: any[], filename: string) => {
   if (data.length === 0) return
   
@@ -478,7 +550,7 @@ export const exportInvoicesChart = () => {
   downloadCSV(csvData, filename)
 }
 
-// Funções de exportação adicionais migradas do PaymentDashboard
+
 export const exportAnalytics = () => {
   const csvData = statsByCurrency.value.map(stat => ({
     'Moeda': stat.currency.code,

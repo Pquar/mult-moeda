@@ -1,16 +1,15 @@
 <template>
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <!-- Total Geral -->
+
     <Chart 
-      title="Total Geral (BRL)" 
-      :value="formatCurrency(totalInBRL, { code: 'BRL' })"
+      :title="`Total Geral (${baseCurrency})`" 
+      :value="formatCurrency(totalInBaseCurrency, { code: baseCurrency })"
       :description="`${filteredPayments.length} pagamentos filtrados`"
       color="green"
       trend="up"
       trend-value="+12.5%"
     />
-    
-    <!-- Estatísticas por Moeda -->
+
     <Chart 
       v-for="stat in statsByCurrency" 
       :key="stat.currency.code"
@@ -19,7 +18,7 @@
       :description="`${stat.count} pagamentos`"
       :color="stat.currency.code === 'BRL' ? 'green' : stat.currency.code === 'EUR' ? 'blue' : 'yellow'"
       trend="neutral"
-      :trend-value="`≈ ${formatCurrency(stat.totalBRL, { code: 'BRL' })}`"
+      :trend-value="`≈ ${formatCurrency(stat.totalInBaseCurrency, { code: baseCurrency })}`"
     />
   </div>
 </template>
@@ -27,9 +26,10 @@
 <script setup lang="ts">
 import Chart from '@/components/ui/Chart.vue'
 
-// Props
 interface Props {
   totalInBRL: number
+  totalInBaseCurrency: number
+  baseCurrency: string
   filteredPayments: any[]
   statsByCurrency: any[]
   formatCurrency: (amount: number, currency: any) => string

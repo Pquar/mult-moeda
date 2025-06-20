@@ -3,13 +3,11 @@ import { inject, type Ref } from 'vue'
 import NavMain from './NavMain.vue'
 import NavDocuments from './NavDocuments.vue'
 
-// Tipo para o estado do sidebar
 interface SidebarState {
   isCollapsed: Ref<boolean>
   toggleSidebar: () => void
 }
 
-// Injetar o estado do sidebar compartilhado
 const sidebarState = inject<SidebarState>('sidebarCollapsed')
 
 if (!sidebarState) {
@@ -75,7 +73,6 @@ const data = {
   ]
 }
 
-// Função para scroll suave
 const smoothScrollTo = (elementId: string, event: Event) => {
   event.preventDefault()
   
@@ -96,13 +93,12 @@ const smoothScrollTo = (elementId: string, event: Event) => {
     class="fixed left-0 top-0 bg-white border-r border-gray-200 flex flex-col h-screen transition-all duration-300 overflow-hidden z-30"
     :class="{ 'w-16': isCollapsed, 'w-64': !isCollapsed }"
   >
-    <!-- Header -->
     <div class="relative border-b border-gray-200">
       <div class="m-0 p-0">
         <div class="list-none">
           <button 
-            @click="toggleSidebar"
             class="w-full text-inherit flex items-center gap-3 p-4 rounded-lg hover:bg-gray-100 transition-colors"
+            @click="toggleSidebar"
           >
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
               M
@@ -115,29 +111,26 @@ const smoothScrollTo = (elementId: string, event: Event) => {
       </div>
     </div>
 
-    <!-- Content with custom scrollbar using Tailwind -->
     <div class="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
-      <NavMain :items="data.navMain" v-if="!isCollapsed" />
+      <NavMain v-if="!isCollapsed" :items="data.navMain" />
       
-      <!-- Collapsed navigation -->
       <div v-if="isCollapsed" class="space-y-2">
         <a 
           v-for="item in data.navMain" 
           :key="item.title"
           :href="item.url"
-          @click="smoothScrollTo(item.url, $event)"
           class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
           :title="item.title"
+          @click="smoothScrollTo(item.url, $event)"
         >
           <i :class="item.icon" class="w-5 h-5 text-gray-600"></i>
         </a>
       </div>
       
-      <NavDocuments :items="data.documents" v-if="!isCollapsed" />
+      <NavDocuments v-if="!isCollapsed" :items="data.documents" />
     </div>
 
-    <!-- Footer -->
-    <div class="p-4 border-t border-gray-200" v-if="!isCollapsed">
+    <div v-if="!isCollapsed" class="p-4 border-t border-gray-200">
       <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
         <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
           <i class="fas fa-user text-gray-600"></i>
@@ -150,5 +143,3 @@ const smoothScrollTo = (elementId: string, event: Event) => {
     </div>
   </aside>
 </template>
-
-<!-- AppSidebar uses only Tailwind CSS -->

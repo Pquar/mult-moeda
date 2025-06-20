@@ -69,7 +69,6 @@ const handleMouseOut = () => {
         :key="index"
         class="flex flex-col items-center gap-2 min-w-[40px]"
       >
-        <!-- Barra da coluna -->
         <div class="relative flex flex-col justify-end" :style="{ height: `${height - 80}px` }">
           <div
             class="w-8 bg-gray-200 rounded-t-md cursor-pointer transition-all duration-300 hover:brightness-110 hover:scale-105"
@@ -82,7 +81,6 @@ const handleMouseOut = () => {
           ></div>
         </div>
         
-        <!-- Label -->
         <div v-if="showLabels" class="text-[10px] text-gray-600 text-center font-medium leading-tight max-w-[50px]">
           {{ item.label }}
         </div>
@@ -97,5 +95,3 @@ const handleMouseOut = () => {
     />
   </div>
 </template>
-
-<!-- ChartColumn uses only Tailwind CSS -->

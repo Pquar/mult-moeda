@@ -115,7 +115,6 @@ const handleMouseOut = () => {
     <div v-if="title" class="text-base font-semibold text-gray-700 text-center mb-4">{{ title }}</div>
     
     <div class="flex items-center justify-center gap-8 h-full min-h-[200px]">
-      <!-- Gráfico de Pizza -->
       <div class="flex-shrink-0">
         <svg 
           ref="svgRef"
@@ -138,8 +137,7 @@ const handleMouseOut = () => {
           </g>
         </svg>
       </div>
-      
-      <!-- Legenda -->
+
       <div class="flex flex-col gap-2 flex-1 max-w-[280px] max-h-[200px] overflow-y-auto">
         <div 
           v-for="(slice, index) in slices" 
@@ -164,5 +162,3 @@ const handleMouseOut = () => {
     />
   </div>
 </template>
-
-<!-- ChartPie uses only Tailwind CSS -->
